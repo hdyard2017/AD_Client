@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     - name: set up JDK 11
       uses: actions/setup-java@v3
       with:
@@ -23,4 +23,13 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew assemble
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file:  app/build/outputs/apk/release/*.apk
+        tag: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
+        body: ""
